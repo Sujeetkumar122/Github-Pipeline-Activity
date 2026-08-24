@@ -1,11 +1,11 @@
-yaml
 name: Terraform CI/CD
 
 on:
   push:
     branches:
       - main
-      - 'features/Newbranch
+      - features/Newbranch
+      - features/sujeet
 
   pull_request:
     branches:
@@ -14,6 +14,10 @@ on:
 permissions:
   id-token: write
   contents: read
+
+defaults:
+  run:
+    working-directory: environment/prod
 
 jobs:
 
@@ -36,8 +40,7 @@ jobs:
           subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
 
       - name: Verify Azure Login
-        run: |
-          az account show
+        run: az account show
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -58,7 +61,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: tfplan
+          path: environment/prod/tfplan
 
 
   terraform-apply:
@@ -96,6 +99,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan
+          path: environment/prod
 
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan

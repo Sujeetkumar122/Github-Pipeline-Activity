@@ -27,6 +27,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    environment:
+      name: prod
+
     steps:
 
       - name: Checkout Code
